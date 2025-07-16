@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{fragments/head :: head(Homepage)}"></head>
+
+<body class="bg-dark">
+
+    <header>
+        <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    </header>
+
+
+
+
+    <main>
+        <section class="container mt-5">
+            <div class="col-12">
+                <h1 class="text-center text-light mb-5">
+                    Ticket viewer and editor
+                </h1>
+            </div>
+
+            <!-- Table -->
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Body</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ticket : ${tickets}" th:object="${ticket}">
+                        <td>[[*{title}]]</td>
+                        <td>[[*{body}]]</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer>
+
+    </footer>
+
+
+    <script th:replace="~{fragments/popper :: popper}"></script>
+</body>
+
+</html>
