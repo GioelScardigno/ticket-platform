@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{fragments/head :: head(Homepage)}"></head>
+
+<body class="bg-dark">
+
+    <header>
+        <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    </header>
+
+
+
+    <!-- main -->
+    <main>
+        <section class="container mt-5 col-6">
+            <div class="col-12">
+                <h1 class="text-center text-light mb-5">
+                    <i class="bi bi-plus-circle-fill"></i> Adding a new Ticket
+                </h1>
+            </div>
+
+        </section>
+
+        <div class="container col-6">
+            <!-- form -->
+            <form th:action="@{/tickets/create}" method="post" th:object="${ticket}" class="mb-4">
+
+
+                <label class="form-label text-light fs-4 mt-4" for="title">Title</label>
+                <input class="form-control text-bg-dark border-secondary" type="text" th:errorClass="is-invalid"
+                    id="title" th:field="*{title}">
+
+                <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
+                <label class="form-label text-light fs-4 mt-4" for="body">Body</label>
+                <textarea rows="4" class="form-control text-bg-dark border-secondary" type="text"
+                    th:errorClass="is-invalid" id="body" th:field="*{body}"></textarea>
+
+                <div th:if="${#fields.hasErrors('body')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('body')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
+
+
+                <div class="d-flex justify-content-between mt-4">
+                    <!-- go back button -->
+                    <div class="">
+                        <a th:href="@{/tickets}" class="btn btn-sm btn-outline-secondary mb-4">
+                            <i class="bi bi-arrow-90deg-left"></i> Cancel
+                        </a>
+                    </div>
+
+                    <!-- go back button -->
+                    <div class="">
+                        <button type="submit" th:href="@{/tickets}" class="btn btn-sm btn-outline-light mb-4">
+                            <i class="bi bi-plus-circle-fill"></i> Add new ticket
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+            <!-- form end -->
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+    <!-- end main -->
+
+    <footer>
+
+    </footer>
+
+
+    <script th:replace="~{fragments/popper :: popper}"></script>
+</body>
+
+</html>

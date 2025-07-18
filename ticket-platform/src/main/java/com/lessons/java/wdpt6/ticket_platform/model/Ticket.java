@@ -1,5 +1,7 @@
 package com.lessons.java.wdpt6.ticket_platform.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "tickets")
 public class Ticket {
 
+    //id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -24,6 +27,8 @@ public class Ticket {
         this.id = id;
     }
 
+
+    //Title
     @NotBlank(message = "title input is mandatory")
     private String title;
 
@@ -35,6 +40,8 @@ public class Ticket {
         this.title = title;
     }
 
+
+    //body
     @Lob
     @NotBlank(message = "body input is mandatory")
     private String body;
@@ -45,6 +52,14 @@ public class Ticket {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+
+    //creation date
+    private LocalDate creationDate = LocalDate.now();
+
+    public LocalDate getCreationDate() {
+        return this.creationDate;
     }
 
 }

@@ -11,32 +11,59 @@
 
 
 
-
+    <!-- main -->
     <main>
-        <section class="container mt-5">
+        <section class="container mt-5 col-6">
             <div class="col-12">
                 <h1 class="text-center text-light mb-5">
                     Ticket viewer and editor
                 </h1>
             </div>
 
+            <div class="col-12 mt-5" th:unless="${tickets.size() > 0}">
+                <h3 class="text-center text-secondary mb-5">
+                    No pending tickets ¯\_(ツ)_/¯
+                </h3>
+            </div>
+
+            <!-- add ticket button -->
+            <div class="mb-2">
+                <a class="btn bnt-sm btn-outline-secondary" th:href="@{/tickets/create}">
+                    <i class="bi bi-plus-circle-fill"></i> Add a new Ticket
+                </a>
+            </div>
+
             <!-- Table -->
-            <table class="table table-dark">
+            <table class="table table-dark" th:if="${tickets.size() > 0}">
                 <thead>
                     <tr>
                         <th scope="col">Title</th>
-                        <th scope="col">Body</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col">Creation Date</th>
+                        <th class="text-end" scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="ticket : ${tickets}" th:object="${ticket}">
                         <td>[[*{title}]]</td>
-                        <td>[[*{body}]]</td>
-                        <td></td>
+                        <td>[[*{creationDate}]]</td>
+                        <td class="text-end">
+                            <!-- show button -->
+                            <a th:href="@{|tickets/*{id}|}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-info-circle-fill"></i>
+                            </a>
+                            <!-- edit button -->
+                            <a th:href="@{|tickets/*{id}/edit|}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pen-fill"></i>
+                            </a>
+                            <!-- delete button -->
+                            <a th:href="@{|tickets/*{id}/delete|}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-x-square-fill"></i>
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+            <!-- end table -->
 
         </section>
 
@@ -56,6 +83,7 @@
 
 
     </main>
+    <!-- end main -->
 
     <footer>
 

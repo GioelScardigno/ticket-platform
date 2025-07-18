@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{fragments/head :: head(Homepage)}"></head>
+
+<body class="bg-dark">
+
+    <header>
+        <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    </header>
+
+
+
+    <!-- main -->
+    <main>
+        <section class="container mt-5 col-6">
+            <div class="col-12">
+                <h1 class="text-center text-light mb-5">
+                    Ticket details
+                </h1>
+            </div>
+
+
+
+            <!-- card -->
+            <div class="card text-bg-dark border-secondary text-center mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-subtitle">[[${ticket.title}]]</h5>
+                        <h6 class="card-subtitle text-secondary mb-4">Creation date: [[${ticket.creationDate}]]</h6>
+                    </div>
+                    <p class="card-text">[[${ticket.body}]]</p>
+                </div>
+
+                <!-- go back button -->
+                <div class="">
+                    <a th:href="@{/tickets}" class="btn btn-sm btn-outline-secondary mb-4">
+                        <i class="bi bi-arrow-90deg-left"></i>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+    <!-- end main -->
+
+    <footer>
+
+    </footer>
+
+
+    <script th:replace="~{fragments/popper :: popper}"></script>
+</body>
+
+</html>
