@@ -1,5 +1,6 @@
 package com.lessons.java.wdpt6.ticket_platform.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lessons.java.wdpt6.ticket_platform.model.Ticket;
 import com.lessons.java.wdpt6.ticket_platform.repo.TicketRepo;
 
 import jakarta.validation.Valid;
-
 
 @Controller
 @RequestMapping("/tickets")
@@ -28,16 +29,25 @@ public class TicketController {
     TicketRepo ticketRepo;
 
     @GetMapping
-    public String tickets(Model model){
+    public String tickets(Model model, @RequestParam(name = "keyword", required = false) String keyword) {
 
-        model.addAttribute("tickets", ticketRepo.findAll());
+        List<Ticket> tickets;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            tickets = ticketRepo.findByTitleContainingIgnoreCase(keyword);
+        } else {
+            tickets = ticketRepo.findAll();
+        }
+
+        model.addAttribute("tickets", tickets);
+        model.addAttribute("keyword", keyword);
 
         return "tickets/index";
 
     }
 
     @GetMapping("/create")
-    public String create(Model model){
+    public String create(Model model) {
 
         model.addAttribute("ticket", new Ticket());
 
@@ -46,10 +56,10 @@ public class TicketController {
     }
 
     @PostMapping("/create")
-    public String store(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model){
+    public String store(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-                        return "tickets/create";
+            return "tickets/create";
         } else {
             ticketRepo.save(formTicket);
         }
@@ -57,20 +67,56 @@ public class TicketController {
         return "redirect:/tickets";
     }
 
-
-
     @GetMapping("{id}")
-    public String view(Model model, @PathVariable Integer id){
+    public String view(Model model, @PathVariable Integer id) {
 
         Optional<Ticket> ticketOptional = ticketRepo.findById(id);
 
         if (ticketOptional.isPresent()) {
-                        model.addAttribute("ticket", ticketOptional.get());
+            model.addAttribute("ticket", ticketOptional.get());
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no ticket found with id: " + id);
         }
 
         return "tickets/show";
+
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable("id") Integer id) {
+
+        Optional<Ticket> ticketOptional = ticketRepo.findById(id);
+
+        if (ticketOptional.isPresent()) {
+            model.addAttribute("ticket", ticketOptional.get());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no ticket found with id: " + id);
+        }
+
+        return "tickets/edit";
+
+    }
+
+    @PostMapping("/{id}/edit")
+    public String update(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "tickets/create";
+        } else {
+            ticketRepo.save(formTicket);
+        }
+
+        return "redirect:/tickets";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(Model model, @PathVariable("id") Integer id){
+
+        Ticket ticketToDelete = ticketRepo.findById(id).get();
+
+        ticketRepo.delete(ticketToDelete);
+            
+        return "redirect:/tickets";
 
     }
 

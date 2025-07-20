@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="~{fragments/head :: head(Homepage)}"></head>
+<head th:replace="~{fragments/head :: head(Tickets)}"></head>
 
 <body class="bg-dark">
 
@@ -20,17 +20,36 @@
                 </h1>
             </div>
 
+            <div class="d-flex justify-content-between">
+
+                <!-- add ticket button -->
+                <div class="mb-2">
+                    <a class="btn bnt-sm btn-outline-secondary" th:href="@{/tickets/create}">
+                        <i class="bi bi-plus-circle-fill"></i> Add a new Ticket
+                    </a>
+                </div>
+
+                <!-- search-bar form -->
+                <form th:action="@{/tickets}" method="get">
+
+                    <div class="input-group">
+                        <input type="search" name="keyword" id="ticket-search-input"
+                            class="form-control text-bg-dark border-secondary" th:value="${keyword}">
+
+                        <button class="btn btn-sm btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i> search
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- no tickets message -->
             <div class="col-12 mt-5" th:unless="${tickets.size() > 0}">
                 <h3 class="text-center text-secondary mb-5">
                     No pending tickets ¯\_(ツ)_/¯
                 </h3>
-            </div>
-
-            <!-- add ticket button -->
-            <div class="mb-2">
-                <a class="btn bnt-sm btn-outline-secondary" th:href="@{/tickets/create}">
-                    <i class="bi bi-plus-circle-fill"></i> Add a new Ticket
-                </a>
             </div>
 
             <!-- Table -->
@@ -56,10 +75,42 @@
                                 <i class="bi bi-pen-fill"></i>
                             </a>
                             <!-- delete button -->
-                            <a th:href="@{|tickets/*{id}/delete|}" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-x-square-fill"></i>
-                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+                                th:data-bs-target="'#delete-modal-' + *{id}">
+                                <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" data-bs-theme="dark" th:id="'delete-modal-' + *{id}" data-bs-backdrop="static"
+                                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Deleting:
+                                                "[[*{title}]]""
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-start">
+                                                This ticket will be permanently deleted from the database. <br>do you want to proceed?
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-arrow-90deg-left"></i> Go
+                                                back</button>
+                                            <form th:action="@{|/tickets/*{id}/delete|}" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-outline-light"><i class="bi bi-trash-fill"></i> Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
+
                     </tr>
                 </tbody>
             </table>

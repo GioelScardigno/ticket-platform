@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="~{fragments/head :: head(Create)}"></head>
+<head th:replace="~{fragments/head :: head(Edit)}"></head>
 
 <body class="bg-dark">
 
@@ -16,7 +16,7 @@
         <section class="container mt-5 col-6">
             <div class="col-12">
                 <h1 class="text-center text-light mb-5">
-                    <i class="bi bi-plus-circle-fill"></i> Adding a new Ticket
+                    <i class="bi bi-plus-circle-fill"></i> Editing Ticket
                 </h1>
             </div>
 
@@ -24,7 +24,7 @@
 
         <div class="container col-6">
             <!-- form -->
-            <form th:action="@{/tickets/create}" method="post" th:object="${ticket}" class="mb-4">
+            <form th:action="@{|/tickets/*{id}/edit|}" method="post" th:object="${ticket}" class="mb-4">
 
 
                 <label class="form-label text-light fs-4 mt-4" for="title">Title</label>
@@ -60,7 +60,7 @@
                     <!-- go back button -->
                     <div class="">
                         <button type="submit" th:href="@{/tickets}" class="btn btn-sm btn-outline-light mb-4">
-                            <i class="bi bi-plus-circle-fill"></i> Add new ticket
+                            <i class="bi bi-plus-circle-fill"></i> Update ticket
                         </button>
                     </div>
                 </div>
