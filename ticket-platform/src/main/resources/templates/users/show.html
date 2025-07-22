@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="~{fragments/head :: head('Ticket Details')}"></head>
+<head th:replace="~{fragments/head :: head('User details')}"></head>
 
 <body class="bg-dark">
 
@@ -13,28 +13,29 @@
 
     <!-- main -->
     <main>
-        <section class="container mt-5 col-6">
+        <section class="container mt-5 col-3">
             <div class="col-12">
                 <h1 class="text-center text-light mb-5">
-                    Ticket details
+                    User details
                 </h1>
             </div>
 
 
 
             <!-- card -->
-            <div class="card text-bg-dark border-secondary text-center mb-3">
+            <div class="card text-bg-dark border-secondary" th:object="${user}">
+                <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-subtitle">[[${ticket.title}]]</h5>
-                        <h6 class="card-subtitle text-secondary mb-4">Creation date: [[${ticket.creationDate}]]</h6>
-                    </div>
-                    <p class="card-text">[[${ticket.body}]]</p>
+                    <h5 class="card-title">Username: [[${user.userName}]]</h5>
+                    <h5 class="card-title mb-3">Password: [[*{password}]]</h5>
+                    <h6 class="card-subtitle text-secondary mb-4">Roles: <span th:each="role : *{roles}">
+                            [[${role.title}]]
+                        </span></h6>
                 </div>
 
                 <!-- go back button -->
-                <div class="">
-                    <a th:href="@{/tickets}" class="btn btn-sm btn-outline-secondary mb-4">
+                <div class="text-center">
+                    <a th:href="@{/users}" class="btn btn-sm btn-outline-secondary mb-4">
                         <i class="bi bi-arrow-90deg-left"></i> Return
                     </a>
                 </div>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{fragments/head :: head(Users)}"></head>
+
+<body class="bg-dark">
+
+    <header>
+        <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    </header>
+
+
+
+    <!-- main -->
+    <main>
+        <section class="container mt-5 col-6">
+            <div class="col-12">
+                <h1 class="text-center text-light mb-5">
+                    Users viewer and editor
+                </h1>
+            </div>
+
+            <div class="d-flex justify-content-between">
+
+                <!-- add ticket button -->
+                <div class="mb-2">
+                    <a class="btn bnt-sm btn-outline-secondary" th:href="@{/users/create}">
+                        <i class="bi bi-person-plus-fill"></i> Add a new User
+                    </a>
+                </div>
+
+                <!-- search-bar form -->
+                <form th:action="@{/users}" method="get">
+
+                    <div class="input-group">
+                        <input type="search" name="keyword" id="user-search-input"
+                            class="form-control text-bg-dark border-secondary" th:value="${keyword}">
+
+                        <button class="btn btn-sm btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i> search
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- no tickets message -->
+            <div class="col-12 mt-5" th:unless="${users.size() > 0}">
+                <h3 class="text-center text-secondary mb-5">
+                    No users found ¯\_(ツ)_/¯
+                </h3>
+            </div>
+
+            <!-- Table -->
+            <table class="table table-dark" th:if="${users.size() > 0}">
+                <thead>
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Role</th>
+                        <th class="text-end" scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}" th:object="${user}">
+                        <td>[[*{userName}]]</td>
+                        <td>
+                            <div th:each="role : *{roles}">
+                                [[${role.title}]]
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1 justify-content-end">
+                                <!-- show button -->
+                                <a th:href="@{|users/*{id}|}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </a>
+                                <!-- edit button -->
+                                <a th:href="@{|users/*{id}/edit|}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-pen-fill"></i>
+                                </a>
+                                <!-- delete button -->
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+                                    th:data-bs-target="'#delete-modal-' + *{id}">
+                                    <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" data-bs-theme="dark" th:id="'delete-modal-' + *{id}"
+                                    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Deleting:
+                                                    "[[*{userName}]]"
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-start">
+                                                    This user will be permanently deleted from the database. <br>do you
+                                                    wish to proceed?
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                    data-bs-dismiss="modal"><i class="bi bi-arrow-90deg-left"></i> Go
+                                                    back</button>
+                                                <form th:action="@{|/users/*{id}/delete|}" method="post"
+                                                    class="d-inline">
+                                                    <button type="submit" class="btn btn-outline-light"><i
+                                                            class="bi bi-trash-fill"></i> Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <!-- end table -->
+
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+    <!-- end main -->
+
+    <footer>
+
+    </footer>
+
+
+    <script th:replace="~{fragments/popper :: popper}"></script>
+</body>
+
+</html>

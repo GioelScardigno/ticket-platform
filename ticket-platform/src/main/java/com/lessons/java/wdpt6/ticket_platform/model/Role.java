@@ -1,40 +1,39 @@
 package com.lessons.java.wdpt6.ticket_platform.model;
-
-import java.time.LocalDate;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "tickets")
-public class Ticket {
-
+@Table(name = "roles")
+public class Role {
+    
     //id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
    
-    //Title
-    @NotBlank(message = "title input is mandatory")
+    //title
+    @NotBlank
     private String title;
-        
-    //body
-    @Lob
-    @NotBlank(message = "body input is mandatory")
-    private String body;
-    
-    
 
+    //many to many relation
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
+
+    
+    
+    
     //getters and setters
     public Integer getId() {
         return this.id;
     }
-
+    
     public void setId(Integer id) {
         this.id = id;
     }
@@ -46,20 +45,13 @@ public class Ticket {
     public void setTitle(String title) {
         this.title = title;
     }
-        
-    public String getBody() {
-        return this.body;
+    
+    public Set<User> getUsers() {
+        return this.users;
     }
     
-    public void setBody(String body) {
-        this.body = body;
+    public void setUsers(Set<User> users) {
+        this.users = users; 
     }
-
-    //creation date
-    private LocalDate creationDate = LocalDate.now();
-
-    public LocalDate getCreationDate() {
-        return this.creationDate;
-    }
-
+    
 }

@@ -29,7 +29,7 @@ public class TicketController {
     TicketRepo ticketRepo;
 
     @GetMapping
-    public String tickets(Model model, @RequestParam(name = "keyword", required = false) String keyword) {
+    public String tickets(Model model, @RequestParam(required = false) String keyword) {
 
         List<Ticket> tickets;
 
@@ -101,7 +101,7 @@ public class TicketController {
     public String update(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            return "tickets/create";
+            return "tickets/edit";
         } else {
             ticketRepo.save(formTicket);
         }
