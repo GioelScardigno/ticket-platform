@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.lessons.java.wdpt6.ticket_platform.model.Ticket;
 import com.lessons.java.wdpt6.ticket_platform.repo.TicketRepo;
+import com.lessons.java.wdpt6.ticket_platform.repo.UserRepo;
 
 import jakarta.validation.Valid;
 
@@ -28,8 +29,11 @@ public class TicketController {
     @Autowired
     TicketRepo ticketRepo;
 
+    @Autowired
+    UserRepo userRepo;
+
     @GetMapping
-    public String tickets(Model model, @RequestParam(required = false) String keyword) {
+    public String index(Model model, @RequestParam(required = false) String keyword) {
 
         List<Ticket> tickets;
 
@@ -50,6 +54,7 @@ public class TicketController {
     public String create(Model model) {
 
         model.addAttribute("ticket", new Ticket());
+        model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
 
         return "tickets/create";
 
@@ -57,6 +62,8 @@ public class TicketController {
 
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
+
+        model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
 
         if (bindingResult.hasErrors()) {
             return "tickets/create";
@@ -85,6 +92,8 @@ public class TicketController {
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") Integer id) {
 
+        model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
+
         Optional<Ticket> ticketOptional = ticketRepo.findById(id);
 
         if (ticketOptional.isPresent()) {
@@ -99,6 +108,8 @@ public class TicketController {
 
     @PostMapping("/{id}/edit")
     public String update(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
+
+        model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
 
         if (bindingResult.hasErrors()) {
             return "tickets/edit";

@@ -47,7 +47,18 @@
                     </ul>
                 </div>
 
+                <!-- operator selection -->
+                <label class="form-label text-light fs-4 mt-4" for="operator">Operator</label>
+                <select class="form-select text-bg-dark border-secondary" th:field="*{user}" id="operator" th:errorClass="is-invalid">
+                    <option value="">Select an operator</option>
+                    <option th:each="user : ${users}" th:value="${user.id}">[[${user.userName}]]</option>
+                </select>
 
+                <div th:if="${#fields.hasErrors('user')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('user')}" th:text="${err}"></li>
+                    </ul>
+                </div>
 
                 <div class="d-flex justify-content-between mt-4">
                     <!-- go back button -->

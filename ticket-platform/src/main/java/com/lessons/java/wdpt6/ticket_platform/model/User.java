@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -35,6 +36,11 @@ public class User {
     @JoinTable(name = "role_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @Size(min = 1, message = "You must select at least one role for the user")
     private Set<Role> roles;
+
+    // one to many relation
+    @OneToMany(mappedBy = "user")
+    private Set<Ticket>  tickets;
+
 
     // getters and setters
     public Integer getId() {

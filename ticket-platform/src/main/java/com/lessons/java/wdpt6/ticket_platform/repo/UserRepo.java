@@ -10,4 +10,6 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     
     public List<User> findByUserNameContainingIgnoreCase(String title);
 
+    public List<User> findByRolesTitle(String title);
+
 }
