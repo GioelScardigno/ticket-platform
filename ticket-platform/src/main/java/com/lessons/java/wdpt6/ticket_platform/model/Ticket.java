@@ -14,33 +14,43 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tickets")
 public class Ticket {
-
+    
     //id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-   
+    
     //Title
     @NotBlank(message = "title input is mandatory")
+    @Size(max = 30, message = "The title exceeds the 30 characters limit")
     private String title;
-        
+    
     //body
     @Lob
     @NotBlank(message = "body input is mandatory")
     private String body;
 
-    // many to one relation
+    //creation date
+    private LocalDate creationDate = LocalDate.now();
+    
+    //user many to one relation
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull(message = "you must select one operator")
     @JsonBackReference
     private User user;
 
-    
+    //status many to one relation
+    @ManyToOne
+    @JoinColumn(name = "ticket_status_id", nullable = false)
+    @JsonBackReference
+    private TicketStatus ticketStatus;
+
     
     
     //getters and setters
@@ -68,9 +78,6 @@ public class Ticket {
         this.body = body;
     }
     
-    //creation date
-    private LocalDate creationDate = LocalDate.now();
-    
     public LocalDate getCreationDate() {
         return this.creationDate;
     }
@@ -83,4 +90,12 @@ public class Ticket {
         this.user = user;
     }
     
+    public TicketStatus getTicketStatus() {
+        return this.ticketStatus;
+    }
+    
+    public void setTicketStatus(TicketStatus ticketStatus) {
+        this.ticketStatus = ticketStatus;
+    }
+
 }

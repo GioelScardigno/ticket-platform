@@ -15,7 +15,7 @@
     <main>
         <section class="container mt-5 col-6">
             <div class="col-12">
-                <h1 class="text-center text-light mb-5">
+                <h1 class="text-center text-light">
                     <i class="bi bi-pencil-square"></i> Editing Ticket
                 </h1>
             </div>
@@ -60,7 +60,13 @@
                     </ul>
                 </div>
 
-                <div class="d-flex justify-content-between mt-4">
+                <!-- Status update -->
+                <label class="form-label text-light fs-4 mt-4" for="operator">Status</label>
+                <select class="form-select text-bg-dark border-secondary" th:field="*{ticketStatus}" id="status" th:errorClass="is-invalid">
+                    <option th:each="ticketStatus : ${ticketStatuses}" th:value="${ticketStatus.id}">[[${ticketStatus.name}]]</option>
+                </select>
+
+                <div class="d-flex justify-content-between mt-5">
                     <!-- go back button -->
                     <div class="">
                         <a th:href="@{/tickets}" class="btn btn-sm btn-outline-secondary mb-4">

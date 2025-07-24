@@ -1,4 +1,5 @@
 package com.lessons.java.wdpt6.ticket_platform.model;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -39,40 +40,49 @@ public class User {
 
     // one to many relation
     @OneToMany(mappedBy = "user")
-    private Set<Ticket>  tickets;
+    private List<Ticket> tickets;
 
-
+    
+    
     // getters and setters
     public Integer getId() {
         return this.id;
     }
-
+    
     public void setId(Integer id) {
         this.id = id;
     }
-
+    
     public String getUserName() {
         return this.userName;
     }
-
+    
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
+    
     public String getPassword() {
         return this.password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public Set<Role> getRoles() {
         return this.roles;
     }
-
+    
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
+    
+    public List<Ticket> getTickets() {
+        return this.tickets;
+    }
+    
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+    
 }

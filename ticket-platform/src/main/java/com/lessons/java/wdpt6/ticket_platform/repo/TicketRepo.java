@@ -9,5 +9,5 @@ import com.lessons.java.wdpt6.ticket_platform.model.Ticket;
 public interface TicketRepo extends JpaRepository<Ticket, Integer> {
 
     public List<Ticket> findByTitleContainingIgnoreCase(String title);
-
+    
 }

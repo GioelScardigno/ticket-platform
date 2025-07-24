@@ -13,7 +13,7 @@
 
     <!-- main -->
     <main>
-        <section class="container mt-5 col-6">
+        <section class="container mt-5 col-7">
             <div class="col-12">
                 <h1 class="text-center text-light mb-5">
                     Ticket viewer and editor
@@ -48,7 +48,7 @@
             <!-- no tickets message -->
             <div class="col-12 mt-5" th:unless="${tickets.size() > 0}">
                 <h3 class="text-center text-secondary mb-5">
-                    No pending tickets ¯\_(ツ)_/¯
+                    No tickets found ¯\_(ツ)_/¯
                 </h3>
             </div>
 
@@ -58,6 +58,7 @@
                     <tr>
                         <th scope="col">Title</th>
                         <th scope="col">Creation Date</th>
+                        <th scope="col">Status</th>
                         <th class="text-end" scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -65,6 +66,7 @@
                     <tr th:each="ticket : ${tickets}" th:object="${ticket}">
                         <td>[[*{title}]]</td>
                         <td>[[*{creationDate}]]</td>
+                        <td>[[*{ticketStatus.name}]]</td>
                         <td class="text-end">
                             <!-- show button -->
                             <a th:href="@{|tickets/*{id}|}" class="btn btn-sm btn-outline-secondary">

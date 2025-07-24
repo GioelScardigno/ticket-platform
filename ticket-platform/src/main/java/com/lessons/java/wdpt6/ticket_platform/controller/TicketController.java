@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lessons.java.wdpt6.ticket_platform.model.Ticket;
+import com.lessons.java.wdpt6.ticket_platform.model.TicketStatus;
 import com.lessons.java.wdpt6.ticket_platform.repo.TicketRepo;
+import com.lessons.java.wdpt6.ticket_platform.repo.TicketStatusRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.UserRepo;
 
 import jakarta.validation.Valid;
@@ -31,6 +33,9 @@ public class TicketController {
 
     @Autowired
     UserRepo userRepo;
+
+    @Autowired 
+    TicketStatusRepo ticketStatusRepo;
 
     @GetMapping
     public String index(Model model, @RequestParam(required = false) String keyword) {
@@ -53,8 +58,15 @@ public class TicketController {
     @GetMapping("/create")
     public String create(Model model) {
 
-        model.addAttribute("ticket", new Ticket());
         model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
+
+        Ticket newTicket = new Ticket();
+        model.addAttribute("ticket", newTicket);
+       
+        TicketStatus defaulTicketStatus = ticketStatusRepo.findByName("TO DO");
+        newTicket.setTicketStatus(defaulTicketStatus);
+
+
 
         return "tickets/create";
 
@@ -65,9 +77,12 @@ public class TicketController {
 
         model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
 
+        TicketStatus defaulTicketStatus = ticketStatusRepo.findByName("TO DO");
+
         if (bindingResult.hasErrors()) {
             return "tickets/create";
         } else {
+            formTicket.setTicketStatus(defaulTicketStatus);
             ticketRepo.save(formTicket);
         }
 
@@ -93,6 +108,7 @@ public class TicketController {
     public String edit(Model model, @PathVariable("id") Integer id) {
 
         model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
+        model.addAttribute("ticketStatuses", ticketStatusRepo.findAll());
 
         Optional<Ticket> ticketOptional = ticketRepo.findById(id);
 
@@ -110,6 +126,7 @@ public class TicketController {
     public String update(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
 
         model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
+        model.addAttribute("ticketStatuses", ticketStatusRepo.findAll());
 
         if (bindingResult.hasErrors()) {
             return "tickets/edit";

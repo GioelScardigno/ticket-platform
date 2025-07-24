@@ -23,13 +23,21 @@
 
 
             <!-- card -->
-            <div class="card text-bg-dark border-secondary text-center mb-3">
+            <div class="card text-bg-dark border-secondary text-center" th:object="${ticket}">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <h5 class="card-subtitle">[[${ticket.title}]]</h5>
-                        <h6 class="card-subtitle text-secondary mb-4">Creation date: [[${ticket.creationDate}]]</h6>
+                        <h5 class="card-subtitle">[[*{title}]]</h5>
+                        <h6 class="card-subtitle text-secondary mb-4">Creation date: [[*{creationDate}]]</h6>
                     </div>
-                    <p class="card-text">[[${ticket.body}]]</p>
+                    <h6 class="card-subtitle text-start">Assigned to: [[*{user.userName}]]</h6>
+                    <h6 class="card-subtitle text-start my-3">Status: [[*{ticketStatus.name}]]</h6>
+
+                    <hr>
+
+                    <p class="card-text">[[*{body}]]</p>
+
+                    <hr>
+
                 </div>
 
                 <!-- go back button -->

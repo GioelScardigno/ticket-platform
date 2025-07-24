@@ -13,7 +13,7 @@
 
     <!-- main -->
     <main>
-        <section class="container mt-5 col-3">
+        <section class="container mt-5 col-6">
             <div class="col-12">
                 <h1 class="text-center text-light mb-5">
                     User details
@@ -24,13 +24,31 @@
 
             <!-- card -->
             <div class="card text-bg-dark border-secondary" th:object="${user}">
-                <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">Username: [[${user.userName}]]</h5>
                     <h5 class="card-title mb-3">Password: [[*{password}]]</h5>
-                    <h6 class="card-subtitle text-secondary mb-4">Roles: <span th:each="role : *{roles}">
+                    <h6 class="card-subtitle text-secondary mb-5">Roles: <span th:each="role : *{roles}">
                             [[${role.title}]]
-                        </span></h6>
+                        </span>
+                    </h6>
+
+                    <div th:if="*{tickets.size() > 0}">
+                        <h5 class="card-title">Assigned tickets:</h5>
+                        <hr>
+
+                        <ul>
+                            <li th:each="ticket : *{tickets}">
+                                <div class="d-flex justify-content-between">
+                                    [[${ticket.title}]]
+                                    <span class="text-secondary">
+                                        - Creation date: [[${ticket.creationDate}]]
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <hr>
+
                 </div>
 
                 <!-- go back button -->
