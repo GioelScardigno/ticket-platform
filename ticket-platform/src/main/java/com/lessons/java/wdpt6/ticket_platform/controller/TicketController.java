@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lessons.java.wdpt6.ticket_platform.model.Ticket;
+import com.lessons.java.wdpt6.ticket_platform.model.Note;
 import com.lessons.java.wdpt6.ticket_platform.model.TicketStatus;
+import com.lessons.java.wdpt6.ticket_platform.repo.NoteRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.TicketRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.TicketStatusRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.UserRepo;
@@ -34,8 +36,11 @@ public class TicketController {
     @Autowired
     UserRepo userRepo;
 
-    @Autowired 
+    @Autowired
     TicketStatusRepo ticketStatusRepo;
+
+    @Autowired
+    NoteRepo noteRepo;
 
     @GetMapping
     public String index(Model model, @RequestParam(required = false) String keyword) {
@@ -60,13 +65,7 @@ public class TicketController {
 
         model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
 
-        Ticket newTicket = new Ticket();
-        model.addAttribute("ticket", newTicket);
-       
-        TicketStatus defaulTicketStatus = ticketStatusRepo.findByName("TO DO");
-        newTicket.setTicketStatus(defaulTicketStatus);
-
-
+        model.addAttribute("ticket", new Ticket());
 
         return "tickets/create";
 
@@ -105,7 +104,7 @@ public class TicketController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Integer id) {
+    public String edit(Model model, @PathVariable Integer id) {
 
         model.addAttribute("users", userRepo.findByRolesTitle("OPERATOR"));
         model.addAttribute("ticketStatuses", ticketStatusRepo.findAll());
@@ -132,19 +131,41 @@ public class TicketController {
             return "tickets/edit";
         } else {
             ticketRepo.save(formTicket);
+            return "redirect:/tickets";
         }
 
-        return "redirect:/tickets";
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(Model model, @PathVariable("id") Integer id){
+    public String delete(Model model, @PathVariable Integer id) {
 
         Ticket ticketToDelete = ticketRepo.findById(id).get();
 
+        for (Note noteToDelete : ticketToDelete.getNotes()) {
+            noteRepo.delete(noteToDelete);
+        }
+
         ticketRepo.delete(ticketToDelete);
-            
+
         return "redirect:/tickets";
+
+    }
+
+    @GetMapping("/{id}/create")
+    public String createNote(@PathVariable Integer id, Model model) {
+
+        Optional<Ticket> ticketOptional = ticketRepo.findById(id);
+
+        if (ticketOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no ticket found with id: " + id);
+
+        model.addAttribute("ticket", ticketOptional.get());
+
+        Note newNote = new Note();
+        newNote.setTicket(ticketOptional.get());
+        model.addAttribute("note", newNote);
+
+        return "notes/create";
 
     }
 

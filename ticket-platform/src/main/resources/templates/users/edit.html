@@ -40,7 +40,7 @@
 
 
                 <label class="form-label text-light fs-4 mt-4" for="password">Password</label>
-                <input class="form-control text-bg-dark border-secondary" type="text" th:errorClass="is-invalid"
+                <input class="form-control text-bg-dark border-secondary" type="password" th:errorClass="is-invalid"
                     id="password" th:field="*{password}">
 
                 <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">

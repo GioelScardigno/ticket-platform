@@ -1,6 +1,7 @@
 package com.lessons.java.wdpt6.ticket_platform.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,6 +52,10 @@ public class Ticket {
     @JoinColumn(name = "ticket_status_id", nullable = false)
     @JsonBackReference
     private TicketStatus ticketStatus;
+
+    //ticket note one to one relation
+    @OneToMany(mappedBy = "ticket")
+    private List<Note> notes;
 
     
     
@@ -96,6 +102,14 @@ public class Ticket {
     
     public void setTicketStatus(TicketStatus ticketStatus) {
         this.ticketStatus = ticketStatus;
+    }
+    
+    public List<Note> getNotes() {
+        return this.notes;
+    }
+    
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 
 }

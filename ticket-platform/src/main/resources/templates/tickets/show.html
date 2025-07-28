@@ -36,14 +36,82 @@
 
                     <p class="card-text">[[*{body}]]</p>
 
-                    <hr>
+
+                    <section th:if="*{notes.size() > 0}">
+
+                        <h4 class="text-start mt-5"><i class="bi bi-sticky-fill"></i>Notes:</h4>
+                        <hr>
+
+                        <div th:each="note : *{notes}">
+                            <h6 class="card-subtitle text-start d-flex justify-content-between">Author: [[${note.author}]]
+
+                                <div>
+                                    <!-- edit button -->
+                                    <a th:href="@{|/notes/${note.id}/edit|}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-pen-fill"></i>
+                                    </a>
+
+                                    <!-- delete button -->
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        data-bs-toggle="modal" th:data-bs-target="'#delete-modal-' + ${note.id}">
+                                        <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </button>
+                                </div>
+                            </h6>
+
+                            <h6 class="card-subtitle text-start">Title: [[${note.title}]]</h6>
+                            <p class="card-text mt-3">[[${note.body}]]</p>
+
+
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" data-bs-theme="dark" th:id="'delete-modal-' + ${note.id}"
+                                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Deleting note:
+                                                "[[${note.title}]]"
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-start">
+                                                This note will be permanently deleted from the database. <br>do you
+                                                want to proceed?
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                data-bs-dismiss="modal"><i class="bi bi-arrow-90deg-left"></i> Go
+                                                back</button>
+                                            <form th:action="@{|/notes/${note.id}/delete|}" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-outline-light"><i
+                                                        class="bi bi-trash-fill"></i> Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                        </div>
+                    </section>
 
                 </div>
 
                 <!-- go back button -->
-                <div class="">
+                <div class="d-flex justify-content-between container">
                     <a th:href="@{/tickets}" class="btn btn-sm btn-outline-secondary mb-4">
                         <i class="bi bi-arrow-90deg-left"></i> Return
+                    </a>
+
+                    <a th:href="@{|/tickets/*{id}/create|}" class="btn btn-sm btn-outline-secondary mb-4">
+                        <i class="bi bi-sticky-fill"></i> Add a note
                     </a>
                 </div>
             </div>
