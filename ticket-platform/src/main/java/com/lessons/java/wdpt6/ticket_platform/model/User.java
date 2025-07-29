@@ -2,6 +2,8 @@ package com.lessons.java.wdpt6.ticket_platform.model;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -38,10 +41,16 @@ public class User {
     @Size(min = 1, message = "You must select at least one role for the user")
     private Set<Role> roles;
 
-    // one to many relation
+    //ticket one to many relation
     @OneToMany(mappedBy = "user")
     private List<Ticket> tickets;
 
+    //user status many to one relation
+    @ManyToOne
+    @JoinColumn(name = "user_status_id", nullable = false)
+    @JsonBackReference
+    private UserStatus userStatus;
+    
     
     
     // getters and setters
@@ -83,6 +92,14 @@ public class User {
     
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+    
+    public UserStatus getUserStatus() {
+        return this.userStatus;
+    }
+    
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
     
 }

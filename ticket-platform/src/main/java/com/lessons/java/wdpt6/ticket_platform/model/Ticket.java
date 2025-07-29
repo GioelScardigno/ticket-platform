@@ -47,7 +47,7 @@ public class Ticket {
     @JsonBackReference
     private User user;
 
-    //status many to one relation
+    //ticket status many to one relation
     @ManyToOne
     @JoinColumn(name = "ticket_status_id", nullable = false)
     @JsonBackReference
