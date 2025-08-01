@@ -17,10 +17,9 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers("/user").hasAuthority("USER")
-                .requestMatchers("/admin").hasAuthority("ADMIN")
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/**").permitAll())
+                .requestMatchers("/tickets/create", "/tickets/*/delete").hasAuthority("ADMIN")
+                .requestMatchers("/users/** ").hasAuthority("ADMIN")
+                .requestMatchers("/**").hasAnyAuthority("OPERATOR", "ADMIN"))
                 .formLogin(Customizer.withDefaults())
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable());
@@ -32,7 +31,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
-    
+
     }
 
     @Bean
@@ -44,7 +43,7 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
 
-       return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
 }

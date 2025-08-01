@@ -1,6 +1,5 @@
 package com.lessons.java.wdpt6.ticket_platform.model;
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -35,11 +34,11 @@ public class User {
     @NotBlank(message = "Password must not be empty or have any spaces.")
     private String password;
 
-    // many to many relation
+    //role many to many relation
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @Size(min = 1, message = "You must select at least one role for the user")
-    private Set<Role> roles;
+    private List<Role> roles;
 
     //ticket one to many relation
     @OneToMany(mappedBy = "user")
@@ -78,11 +77,11 @@ public class User {
         this.password = password;
     }
     
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return this.roles;
     }
     
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
     

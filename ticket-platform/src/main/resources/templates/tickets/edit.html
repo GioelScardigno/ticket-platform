@@ -27,34 +27,34 @@
             <form th:action="@{|/tickets/*{id}/edit|}" method="post" th:object="${ticket}" class="mb-4">
 
 
-                <label class="form-label text-light fs-4 mt-4" for="title">Title</label>
+                <label class="form-label text-light fs-4 mt-4" for="title" sec:authorize="hasAuthority('ADMIN')">Title</label>
                 <input class="form-control text-bg-dark border-secondary" type="text" th:errorClass="is-invalid"
-                    id="title" th:field="*{title}">
+                    id="title" th:field="*{title}" sec:authorize="hasAuthority('ADMIN')">
 
-                <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback">
+                <div th:if="${#fields.hasErrors('title')}" class="invalid-feedback" sec:authorize="hasAuthority('ADMIN')">
                     <ul>
                         <li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
                     </ul>
                 </div>
 
-                <label class="form-label text-light fs-4 mt-4" for="body">Body</label>
+                <label class="form-label text-light fs-4 mt-4" for="body" sec:authorize="hasAuthority('ADMIN')">Body</label>
                 <textarea rows="4" class="form-control text-bg-dark border-secondary" type="text"
-                    th:errorClass="is-invalid" id="body" th:field="*{body}"></textarea>
+                    th:errorClass="is-invalid" id="body" th:field="*{body}" sec:authorize="hasAuthority('ADMIN')"></textarea>
 
-                <div th:if="${#fields.hasErrors('body')}" class="invalid-feedback">
+                <div th:if="${#fields.hasErrors('body')}" class="invalid-feedback" sec:authorize="hasAuthority('ADMIN')">
                     <ul>
                         <li th:each="err : ${#fields.errors('body')}" th:text="${err}"></li>
                     </ul>
                 </div>
 
                 <!-- operator selection -->
-                <label class="form-label text-light fs-4 mt-4" for="operator">Operator</label>
-                <select class="form-select text-bg-dark border-secondary" th:field="*{user}" id="operator" th:errorClass="is-invalid">
+                <label class="form-label text-light fs-4 mt-4" for="operator" sec:authorize="hasAuthority('ADMIN')">Operator</label>
+                <select class="form-select text-bg-dark border-secondary" th:field="*{user}" id="operator" th:errorClass="is-invalid" sec:authorize="hasAuthority('ADMIN')">
                     <option value="">Select an operator</option>
                     <option th:each="user : ${users}" th:value="${user.id}">[[${user.userName}]]</option>
                 </select>
 
-                <div th:if="${#fields.hasErrors('user')}" class="invalid-feedback">
+                <div th:if="${#fields.hasErrors('user')}" class="invalid-feedback" sec:authorize="hasAuthority('ADMIN')">
                     <ul>
                         <li th:each="err : ${#fields.errors('user')}" th:text="${err}"></li>
                     </ul>

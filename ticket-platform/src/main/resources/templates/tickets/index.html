@@ -24,7 +24,7 @@
 
                 <!-- add ticket button -->
                 <div class="mb-2">
-                    <a class="btn bnt-sm btn-outline-secondary" th:href="@{/tickets/create}">
+                    <a class="btn bnt-sm btn-outline-secondary" th:href="@{/tickets/create}" sec:authorize="hasAuthority('ADMIN')">
                         <i class="bi bi-plus-circle-fill"></i> Add a new Ticket
                     </a>
                 </div>
@@ -78,7 +78,7 @@
                             </a>
                             <!-- delete button -->
                             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
-                                th:data-bs-target="'#delete-modal-' + *{id}">
+                                th:data-bs-target="'#delete-modal-' + *{id}" sec:authorize="hasAuthority('ADMIN')">
                                 <i class="bi bi-trash-fill"></i>
                                 </a>
                             </button>

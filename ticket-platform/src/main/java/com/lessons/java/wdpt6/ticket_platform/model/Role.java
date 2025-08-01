@@ -1,5 +1,5 @@
 package com.lessons.java.wdpt6.ticket_platform.model;
-import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +24,7 @@ public class Role {
 
     //many to many relation
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private List<User> users;
 
     
     
@@ -46,11 +46,11 @@ public class Role {
         this.title = title;
     }
     
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return this.users;
     }
     
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users; 
     }
     

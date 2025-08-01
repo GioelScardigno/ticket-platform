@@ -26,6 +26,7 @@
             <!-- form -->
             <form th:action="@{|/users/*{id}/edit|}" method="post" th:object="${user}" class="mb-4">
 
+                <input type="hidden" th:field="*{userStatus}">
 
                 <label class="form-label text-light fs-4" for="userName">Username</label>
                 <input class="form-control text-bg-dark border-secondary" type="text" th:errorClass="is-invalid"
@@ -40,7 +41,7 @@
 
 
                 <label class="form-label text-light fs-4 mt-4" for="password">Password</label>
-                <input class="form-control text-bg-dark border-secondary" type="password" th:errorClass="is-invalid"
+                <input class="form-control text-bg-dark border-secondary" type="text" th:errorClass="is-invalid"
                     id="password" th:field="*{password}">
 
                 <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">

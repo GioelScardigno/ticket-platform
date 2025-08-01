@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lessons.java.wdpt6.ticket_platform.model.User;
+import com.lessons.java.wdpt6.ticket_platform.model.UserStatus;
 import com.lessons.java.wdpt6.ticket_platform.repo.RoleRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.UserRepo;
+import com.lessons.java.wdpt6.ticket_platform.repo.UserStatusRepo;
 
 import jakarta.validation.Valid;
 
@@ -31,6 +33,9 @@ public class UserController {
 
     @Autowired
     RoleRepo roleRepo;
+
+    @Autowired
+    UserStatusRepo userStatusRepo;
     
     @GetMapping
     public String index(@RequestParam(required = false) String keyword ,Model model){
@@ -78,10 +83,12 @@ public class UserController {
     public String store(@Valid @ModelAttribute("user") User formUser, BindingResult bindingResult, Model model){
 
         model.addAttribute("roles", roleRepo.findAll());
+        UserStatus defaultUserStatus = userStatusRepo.findByName("AVAILABLE");
 
         if (bindingResult.hasErrors()) {
             return "users/create";
         } else {
+            formUser.setUserStatus(defaultUserStatus);
             userRepo.save(formUser);
         }
 
