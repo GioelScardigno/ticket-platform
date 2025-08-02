@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="~{fragments/head :: head(Tickets)}"></head>
+<head th:replace="~{fragments/head :: head(Categories)}"></head>
 
 <body class="bg-dark">
 
@@ -13,27 +13,27 @@
 
     <!-- main -->
     <main>
-        <section class="container mt-5 col-7">
+        <section class="container mt-5 col-4">
             <div class="col-12">
                 <h1 class="text-center text-light mb-5">
-                    Ticket viewer and editor
+                    Categories viewer and editor
                 </h1>
             </div>
 
             <div class="d-flex justify-content-between">
 
-                <!-- add ticket button -->
+                <!-- add category button -->
                 <div class="mb-2">
-                    <a class="btn bnt-sm btn-outline-secondary" th:href="@{/tickets/create}" sec:authorize="hasAuthority('ADMIN')">
-                        <i class="bi bi-plus-circle-fill"></i> Add a new Ticket
+                    <a class="btn bnt-sm btn-outline-secondary" th:href="@{/categories/create}">
+                        <i class="bi bi-bookmark-plus"></i> Add a new category
                     </a>
                 </div>
 
                 <!-- search-bar form -->
-                <form th:action="@{/tickets}" method="get">
+                <form th:action="@{/categories}" method="get">
 
                     <div class="input-group">
-                        <input type="search" name="keyword" id="ticket-search-input"
+                        <input type="search" name="keyword" id="category-search-input"
                             class="form-control text-bg-dark border-secondary" th:value="${keyword}">
 
                         <button class="btn btn-sm btn-outline-secondary" type="submit">
@@ -45,45 +45,40 @@
 
             </div>
 
-            <!-- no tickets message -->
-            <div class="col-12 mt-5" th:unless="${tickets.size() > 0}">
+            <!-- no category message -->
+            <div class="col-12 mt-5" th:unless="${categories.size() > 0}">
                 <h3 class="text-center text-secondary mb-5">
-                    No tickets found ¯\_(ツ)_/¯
+                    No categories found ¯\_(ツ)_/¯
                 </h3>
             </div>
 
             <!-- Table -->
-            <table class="table table-dark" th:if="${tickets.size() > 0}">
+            <table class="table table-dark" th:if="${categories.size() > 0}">
                 <thead>
                     <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Creation Date</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Category</th>
+                        <th scope="col">Name</th>
                         <th class="text-end" scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="ticket : ${tickets}" th:object="${ticket}">
-                        <td>[[*{title}]]</td>
-                        <td>[[*{creationDate}]]</td>
-                        <td>[[*{ticketStatus.name}]]</td>
-                        <td>[[*{category.name}]]</td>
+                    <tr th:each="category : ${categories}" th:object="${category}">
+                        <td>[[*{name}]]</td>
                         <td class="text-end">
                             <!-- show button -->
-                            <a th:href="@{|tickets/*{id}|}" class="btn btn-sm btn-outline-secondary">
+                            <a th:href="@{|categories/*{id}|}" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-info-circle-fill"></i>
                             </a>
                             <!-- edit button -->
-                            <a th:href="@{|tickets/*{id}/edit|}" class="btn btn-sm btn-outline-secondary">
+                            <a th:href="@{|categories/*{id}/edit|}" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-pen-fill"></i>
                             </a>
                             <!-- delete button -->
                             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
-                                th:data-bs-target="'#delete-modal-' + *{id}" sec:authorize="hasAuthority('ADMIN')">
+                                th:data-bs-target="'#delete-modal-' + *{id}" th:if="*{getTickets().isEmpty()}">
                                 <i class="bi bi-trash-fill"></i>
-                                </a>
                             </button>
+                            <!-- grayed out delete button -->
+                            <a href="" class="btn btn-sm btn-outline-secondary disabled" th:unless="*{getTickets().isEmpty()}"><i class="bi bi-trash-fill"></i></a>
 
                             <!-- Modal -->
                             <div class="modal fade" data-bs-theme="dark" th:id="'delete-modal-' + *{id}" data-bs-backdrop="static"
@@ -92,21 +87,21 @@
                                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Deleting:
-                                                "[[*{title}]]""
+                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Deleting
+                                                "[[*{name}]]" category
                                             </h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <p class="text-start">
-                                                This ticket will be permanently deleted from the database. <br>do you want to proceed?
+                                                This category will be permanently deleted from the database. <br>do you want to proceed?
                                             </p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-arrow-90deg-left"></i> Go
                                                 back</button>
-                                            <form th:action="@{|/tickets/*{id}/delete|}" method="post" class="d-inline">
+                                            <form th:action="@{|/categories/*{id}/delete|}" method="post" class="d-inline">
                                                 <button type="submit" class="btn btn-outline-light"><i class="bi bi-trash-fill"></i> Delete</button>
                                             </form>
                                         </div>
@@ -119,6 +114,8 @@
                 </tbody>
             </table>
             <!-- end table -->
+
+            <p class="text-center text-secondary">*Note: to delete a category make sure it isn't already assigned to a ticket.</p>
 
         </section>
 

@@ -62,7 +62,7 @@ public class AccountController {
 
         User user = userOptional.get();
         if (!id.equals(databaseUserDetails.getId()))
-            throw new SecurityException("No authorization to view this page");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No authorization to view this page");
 
         List<Ticket> userTickets = user.getTickets();
 
@@ -130,7 +130,7 @@ public class AccountController {
             userRepo.save(formUser);
         }
 
-        return "redirect:/users";
+        return "redirect:/account";
     }
 
 }

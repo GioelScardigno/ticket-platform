@@ -47,6 +47,19 @@
                     </ul>
                 </div>
 
+                <!-- category selection -->
+                <label class="form-label text-light fs-4 mt-4" for="category">Category</label>
+                <select class="form-select text-bg-dark border-secondary" th:field="*{category}" id="category" th:errorClass="is-invalid">
+                    <option value="">Select a category</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}">[[${category.name}]]</option>
+                </select>
+
+                <div th:if="${#fields.hasErrors('category')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('category')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
                 <!-- operator selection -->
                 <label class="form-label text-light fs-4 mt-4" for="operator">Operator</label>
                 <select class="form-select text-bg-dark border-secondary" th:field="*{user}" id="operator" th:errorClass="is-invalid">

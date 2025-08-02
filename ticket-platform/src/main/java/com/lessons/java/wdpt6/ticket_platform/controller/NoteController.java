@@ -1,9 +1,11 @@
 package com.lessons.java.wdpt6.ticket_platform.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.lessons.java.wdpt6.ticket_platform.model.Note;
+import com.lessons.java.wdpt6.ticket_platform.model.Role;
+import com.lessons.java.wdpt6.ticket_platform.model.User;
 import com.lessons.java.wdpt6.ticket_platform.repo.NoteRepo;
+import com.lessons.java.wdpt6.ticket_platform.repo.RoleRepo;
+import com.lessons.java.wdpt6.ticket_platform.repo.UserRepo;
+import com.lessons.java.wdpt6.ticket_platform.security.DatabaseUserDetails;
 
 import jakarta.validation.Valid;
 
@@ -25,6 +32,12 @@ public class NoteController {
 
     @Autowired
     NoteRepo noteRepo;
+    
+    @Autowired
+    UserRepo userRepo;
+
+    @Autowired
+    RoleRepo roleRepo;
 
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute(name = "note") Note formNote, BindingResult bindingResult, Model model) {
@@ -41,9 +54,16 @@ public class NoteController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable Integer id, Model model) {
+    public String edit(@PathVariable Integer id, Model model, @AuthenticationPrincipal DatabaseUserDetails databaseUserDetails) {
 
         Optional<Note> noteOptional = noteRepo.findById(id);
+
+        User user = userRepo.findById(databaseUserDetails.getId()).get();
+        List<Role> userRoles = user.getRoles();
+
+        if (!noteOptional.get().getTicket().getUser().getId().equals(databaseUserDetails.getId()) && !userRoles.contains(roleRepo.findByTitle("ADMIN"))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you're not authorized to view this page");
+        }
 
         if (noteOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "there is no note with id: " + id);
@@ -57,7 +77,7 @@ public class NoteController {
     public String update(@Valid @ModelAttribute("note") Note formNote, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            return "tickets/edit";
+            return "notes/edit";
         } else {
             noteRepo.save(formNote);
             return "redirect:/tickets";

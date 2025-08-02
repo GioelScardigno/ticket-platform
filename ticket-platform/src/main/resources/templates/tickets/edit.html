@@ -36,6 +36,7 @@
                         <li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
                     </ul>
                 </div>
+                <input type="hidden" th:field="*{title}" sec:authorize="hasAuthority('OPERATOR')">
 
                 <label class="form-label text-light fs-4 mt-4" for="body" sec:authorize="hasAuthority('ADMIN')">Body</label>
                 <textarea rows="4" class="form-control text-bg-dark border-secondary" type="text"
@@ -46,6 +47,21 @@
                         <li th:each="err : ${#fields.errors('body')}" th:text="${err}"></li>
                     </ul>
                 </div>
+                <input type="hidden" th:field="*{body}" sec:authorize="hasAuthority('OPERATOR')">
+
+                <!-- category selection -->
+                <label class="form-label text-light fs-4 mt-4" for="category" sec:authorize="hasAuthority('ADMIN')">Category</label>
+                <select class="form-select text-bg-dark border-secondary" th:field="*{category}" id="category" th:errorClass="is-invalid" sec:authorize="hasAuthority('ADMIN')">
+                    <option value="">Select a category</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}">[[${category.name}]]</option>
+                </select>
+
+                <div th:if="${#fields.hasErrors('category')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('category')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+                <input type="hidden" th:field="*{category}" sec:authorize="hasAuthority('OPERATOR')">
 
                 <!-- operator selection -->
                 <label class="form-label text-light fs-4 mt-4" for="operator" sec:authorize="hasAuthority('ADMIN')">Operator</label>
@@ -59,12 +75,14 @@
                         <li th:each="err : ${#fields.errors('user')}" th:text="${err}"></li>
                     </ul>
                 </div>
+                <input type="hidden" th:field="*{user}" sec:authorize="hasAuthority('OPERATOR')">
 
                 <!-- Status update -->
                 <label class="form-label text-light fs-4 mt-4" for="operator">Status</label>
                 <select class="form-select text-bg-dark border-secondary" th:field="*{ticketStatus}" id="status" th:errorClass="is-invalid">
                     <option th:each="ticketStatus : ${ticketStatuses}" th:value="${ticketStatus.id}">[[${ticketStatus.name}]]</option>
                 </select>
+                <p class="text-center text-secondary mt-2">*Note: you can't change the ticket status from "COMPLETED" if your status is set to "NOT AVAILABLE   "</p>
 
                 <div class="d-flex justify-content-between mt-5">
                     <!-- go back button -->

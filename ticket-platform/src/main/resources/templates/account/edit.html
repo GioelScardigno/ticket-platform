@@ -56,6 +56,8 @@
                 <select class="form-select text-bg-dark border-secondary" th:field="*{userStatus}" id="userStatus" th:errorClass="is-invalid">
                     <option th:each="status : ${userStatuses}" th:value="${status.id}">[[${status.name}]]</option>
                 </select>
+                <input type="hidden" th:field="*{userStatus}" sec:authorize="hasAuthority('ADMIN')">
+                <p class="text-secondary text-center mt-2">*Note: you can't change your status to "NOT AVAILABLE" if you have 1 or more assigned tickets with "TO DO" or "IN PROGRESS" status.</p>
 
 
 
@@ -66,7 +68,7 @@
                     <label class="form-label text-light fs-4 mt-4" for="" sec:authorize="hasAuthority('ADMIN')">Role/s:</label>
                 </div>
                 <span class="mb-3" th:each="role : ${roles}" sec:authorize="hasAuthority('ADMIN')">
-                    <input type="checkbox" class="form-check-input" id="role- + ${role.id}" th:field="${user.roles}"
+                    <input type="checkbox" class="form-check-input" id="role- + ${role.id}" th:field="*{roles}"
                         th:value="${role.id}" th:errorClass="is-invalid">
                     <label for="role-title" class="form-chack-label text-light">[[${role.title}]]</label>
 
@@ -77,6 +79,7 @@
                     </div>
 
                 </span>
+                <input type="hidden" th:field="*{roles}" sec:authorize="hasAuthority('OPERATOR')">
 
 
 
@@ -85,14 +88,14 @@
                 <div class="d-flex justify-content-between mt-4">
                     <!-- go back button -->
                     <div class="">
-                        <a th:href="@{/users}" class="btn btn-sm btn-outline-secondary mb-4">
+                        <a th:href="@{/account}" class="btn btn-sm btn-outline-secondary mb-4">
                             <i class="bi bi-arrow-90deg-left"></i> Cancel
                         </a>
                     </div>
 
-                    <!-- go back button -->
+                    <!-- proceed button -->
                     <div class="">
-                        <button type="submit" th:href="@{/users}" class="btn btn-sm btn-outline-light mb-4">
+                        <button type="submit" class="btn btn-sm btn-outline-light mb-4">
                             <i class="bi bi-person-check-fill"></i> Update Profile
                         </button>
                     </div>

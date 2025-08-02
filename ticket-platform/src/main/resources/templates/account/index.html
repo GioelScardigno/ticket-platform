@@ -31,8 +31,8 @@
                     <div th:each="role : *{roles}">
                         <h6 class="card-title mb-2">[[${role.title}]]</h6>
                     </div>
-                    <h5 class="card-title mb-2 mt-4">Status:</h5>
-                    <div th:each="role : *{roles}">
+                    <h5 class="card-title mb-2 mt-4" sec:authorize="hasAuthority('OPERATOR')">Status:</h5>
+                    <div th:each="role : *{roles}" sec:authorize="hasAuthority('OPERATOR')">
                         <h6 class="card-title mb-2">[[*{userStatus.name}]]</h6>
                     </div>
                     <hr>
@@ -43,7 +43,7 @@
                 <div class="d-flex justify-content-between card-body">
                     <!-- go back button -->
                     <div class="text-center">
-                        <a th:href="@{/users}" class="btn btn-sm btn-outline-secondary">
+                        <a th:href="@{/tickets}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-arrow-90deg-left"></i> Return
                         </a>
                     </div>

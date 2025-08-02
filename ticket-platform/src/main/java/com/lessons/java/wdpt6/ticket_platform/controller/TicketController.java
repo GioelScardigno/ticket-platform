@@ -23,7 +23,9 @@ import com.lessons.java.wdpt6.ticket_platform.model.Note;
 import com.lessons.java.wdpt6.ticket_platform.model.Role;
 import com.lessons.java.wdpt6.ticket_platform.model.TicketStatus;
 import com.lessons.java.wdpt6.ticket_platform.model.User;
+import com.lessons.java.wdpt6.ticket_platform.repo.CategoryRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.NoteRepo;
+import com.lessons.java.wdpt6.ticket_platform.repo.RoleRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.TicketRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.TicketStatusRepo;
 import com.lessons.java.wdpt6.ticket_platform.repo.UserRepo;
@@ -47,9 +49,14 @@ public class TicketController {
     @Autowired
     NoteRepo noteRepo;
 
+    @Autowired
+    CategoryRepo categoryRepo;
+
+    @Autowired
+    RoleRepo roleRepo;
+
     @GetMapping
-    public String index(Model model, @RequestParam(required = false) String keyword,
-            @AuthenticationPrincipal DatabaseUserDetails databaseUserDetails) {
+    public String index(Model model, @RequestParam(required = false) String keyword, @AuthenticationPrincipal DatabaseUserDetails databaseUserDetails) {
 
         User user = userRepo.findById(databaseUserDetails.getId()).get();
         List<Ticket> tickets = new ArrayList<Ticket>();
@@ -103,6 +110,7 @@ public class TicketController {
 
         model.addAttribute("users", users);
         model.addAttribute("ticket", new Ticket());
+        model.addAttribute("categories", categoryRepo.findAll());
 
         return "tickets/create";
 
@@ -110,6 +118,8 @@ public class TicketController {
 
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
+
+        model.addAttribute("categories", categoryRepo.findAll());
 
         List<User> users = new ArrayList<User>();
 
@@ -134,9 +144,16 @@ public class TicketController {
     }
 
     @GetMapping("{id}")
-    public String view(Model model, @PathVariable Integer id) {
+    public String view(Model model, @PathVariable Integer id, @AuthenticationPrincipal DatabaseUserDetails databaseUserDetails) {
 
         Optional<Ticket> ticketOptional = ticketRepo.findById(id);
+
+        User user = userRepo.findById(databaseUserDetails.getId()).get();
+        List<Role> userRoles = user.getRoles();
+
+        if (!ticketOptional.get().getUser().getId().equals(databaseUserDetails.getId()) && !userRoles.contains(roleRepo.findByTitle("ADMIN"))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you're not authorized to view this page");
+        }
 
         if (ticketOptional.isPresent()) {
             model.addAttribute("ticket", ticketOptional.get());
@@ -149,7 +166,9 @@ public class TicketController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable Integer id) {
+    public String edit(Model model, @PathVariable Integer id, @AuthenticationPrincipal DatabaseUserDetails databaseUserDetails) {
+
+        model.addAttribute("categories", categoryRepo.findAll());
 
         List<User> users = new ArrayList<User>();
 
@@ -162,6 +181,14 @@ public class TicketController {
         model.addAttribute("users", users);
 
         Optional<Ticket> ticketOptional = ticketRepo.findById(id);
+
+        User user = userRepo.findById(databaseUserDetails.getId()).get();
+        List<Role> userRoles = user.getRoles();
+
+        if (!ticketOptional.get().getUser().getId().equals(databaseUserDetails.getId()) && !userRoles.contains(roleRepo.findByTitle("ADMIN"))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "you're not authorized to view this page");
+        }
+
         User assignedOperator = ticketOptional.get().getUser();
         List<TicketStatus> ticketStatuses = new ArrayList<TicketStatus>();
         if (assignedOperator.getUserStatus().getName().equals("AVAILABLE")) {
@@ -186,6 +213,8 @@ public class TicketController {
 
     @PostMapping("/{id}/edit")
     public String update(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
+
+        model.addAttribute("categories", categoryRepo.findAll());
 
         List<User> users = new ArrayList<User>();
 

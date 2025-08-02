@@ -18,6 +18,9 @@
           <li class="nav-item">
             <a class="nav-link active" th:href="@{/users}" sec:authorize="hasAuthority('ADMIN')"><i class="bi bi-person-lines-fill"></i> Users</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/categories}" sec:authorize="hasAuthority('ADMIN')"><i class="bi bi-tags-fill"></i>  Categories</a>
+          </li>
         </ul>
       </div>
       <div class="ms-auto text-light me-2">
